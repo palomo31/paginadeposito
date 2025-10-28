@@ -1,0 +1,22 @@
+{
+  "name": "alquiler-equipos",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "postinstall": "echo 'Instalación completada.'"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "body-parser": "^1.20.3",
+    "nodemailer": "^6.10.1",
+    "sqlite3": "^5.1.7"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "description": "Aplicación de alquiler de equipos",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
