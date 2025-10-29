@@ -67,7 +67,7 @@ db.serialize(() => {
       ["Concretadoras", "Concretadoras ", 80000, "/imagenes/concretadoras.png"],
       ["Ranas", "Ranas", 60000, "/imagenes/rana.png"],
       ["Canguros", "Apisonador", 80000, "/imagenes/canguro.png"],
-      ["Taladro rotomartillo pequeño", "Pequeño", 70000, "/imagenes/rotomartillopequeño.png"],
+      ["Taladro rotomartillo pequeño", "Pequeño", 70000, "/imagenes/demoledor.png"],
       ["Taladro rotomartillo grande", "Grande", 90000, "/imagenes/rotomartillogrande.png"],
       ["Vibros", "Vibradores de concreto", 60000, "/imagenes/vibros.png"],
       ["Coches", "Coches de transporte", 15000, "/imagenes/coches.png"],
