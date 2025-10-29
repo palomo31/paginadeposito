@@ -7,27 +7,35 @@ const fs = require("fs");
 
 const app = express();
 const DB_PATH = path.join(__dirname, "data", "db.sqlite");
-const OWNER_EMAIL = "alquilerequipos224@gmail.com"; 
+const OWNER_EMAIL = "alquilerequipos224@gmail.com"; // <-- sigue siendo tu correo
 
-// Transporter Gmail
+// -----------------------------
+// CONFIGURAR RESEND SMTP
+// -----------------------------
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.resend.com",
+  port: 587,
+  secure: false,
   auth: {
-    user: "alquilerequipos224@gmail.com",
-    pass: "nnma sauf khwe vlbo" 
-  }
+    user: "resend", // fijo
+    pass: process.env.RESEND_API_KEY, // configurado en Render
+  },
 });
 
+// -----------------------------
+// CONFIGURACIÓN GENERAL
+// -----------------------------
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 if (!fs.existsSync(path.join(__dirname, "data"))) fs.mkdirSync(path.join(__dirname, "data"));
 
-// Base de datos
+// -----------------------------
+// BASE DE DATOS
+// -----------------------------
 const db = new sqlite3.Database(DB_PATH);
 
 db.serialize(() => {
-  // Crear tablas
   db.run(`CREATE TABLE IF NOT EXISTS products (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT,
@@ -50,12 +58,11 @@ db.serialize(() => {
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 
-  // evita duplicados
-  db.run("DELETE FROM products", [], err => {
+  // limpiar y volver a llenar
+  db.run("DELETE FROM products", [], (err) => {
     if (err) console.error(err);
     else console.log("🗑️ Productos antiguos borrados.");
-    
-    // aca se colocan los productos 
+
     const seed = [
       ["Tacos normales", "Soporte", 300, "/imagenes/taconormal.png"],
       ["Tacos Largos", "Soporte ", 400, "/imagenes/tacolargo.png"],
@@ -64,18 +71,18 @@ db.serialize(() => {
       ["Teleras de 45", "Teleras medianas", 400, "/imagenes/telerapequeña.png"],
       ["Andamios", "Andamios completos", 5000, "/imagenes/andamio.png"],
       ["Tijeras", "Tijeras de soporte", 0, "/imagenes/tijeras.png"],
-      ["Canes", "Canes metálicos", 1000,  "/imagenes/canes.png"],
+      ["Canes", "Canes metálicos", 1000, "/imagenes/canes.png"],
       ["Formaletas", "Formaleta", 30000, "/imagenes/formaletas.png"],
       ["Concretadoras", "Concretadoras ", 80000, "/imagenes/concretadoras.png"],
       ["Ranas", "Ranas", 60000, "/imagenes/rana.png"],
-      ["Canguros", "apisonador", 80000, "/imagenes/canguro.png"], 
-      ["Taladro rotomartillo pequeño", "pequeño", 70000, "/imagenes/rotomartillopequeño.png"],
-      ["Taladro roto martillo grande", "grande", 90000, "/imagenes/rotomartillogrande.png"],
+      ["Canguros", "Apisonador", 80000, "/imagenes/canguro.png"],
+      ["Taladro rotomartillo pequeño", "Pequeño", 70000, "/imagenes/rotomartillopequeño.png"],
+      ["Taladro rotomartillo grande", "Grande", 90000, "/imagenes/rotomartillogrande.png"],
       ["Vibros", "Vibradores de concreto", 60000, "/imagenes/vibros.png"],
       ["Coches", "Coches de transporte", 15000, "/imagenes/coches.png"],
-      ["Bomba de agua", "manejable", 70000, "/imagenes/bomba.png"],
+      ["Bomba de agua", "Manejable", 70000, "/imagenes/bomba.png"],
       ["Escaleras de tijera", "Escaleras plegables", 15000, "/imagenes/escaleras.png"],
-      ["Escalera grande de dos cuerpos", "Escalera alta ", 25000, "/imagenes/escalerotas.png"]
+      ["Escalera grande de dos cuerpos", "Escalera alta", 25000, "/imagenes/escalerotas.png"]
     ];
 
     const stmt = db.prepare("INSERT INTO products (title, description, price_per_day, image) VALUES (?,?,?,?)");
@@ -85,7 +92,9 @@ db.serialize(() => {
   });
 });
 
-// API Productos
+// -----------------------------
+// API PRODUCTOS
+// -----------------------------
 app.get("/api/products", (req, res) => {
   db.all("SELECT * FROM products", (err, rows) => {
     if (err) return res.status(500).json({ error: err.message });
@@ -93,8 +102,9 @@ app.get("/api/products", (req, res) => {
   });
 });
 
-// API Cotización múltiple
-
+// -----------------------------
+// API COTIZACIÓN
+// -----------------------------
 app.post("/api/quote", async (req, res) => {
   const q = req.body;
 
@@ -129,23 +139,25 @@ app.post("/api/quote", async (req, res) => {
 
   stmt.finalize();
 
-  try {
-    await transporter.sendMail({
-      from: `"Cotizaciones Web" <${transporter.options.auth.user}>`,
+ try {
+  await transporter.sendMail({
+      from: "Cotizaciones Web <onboarding@resend.dev>", // <--- ESTA ES LA LÍNEA CLAVE
       to: OWNER_EMAIL,
       subject: `Nueva cotización de ${q.name}`,
       text: emailText
-    });
+  });
+
 
     res.json({ success: true });
   } catch (err) {
-    console.error(err);
+    console.error("❌ Error al enviar correo:", err);
     res.status(500).json({ success: false, error: err.message });
   }
 });
 
-
-// Servir frontend
+// -----------------------------
+// FRONTEND
+// -----------------------------
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
