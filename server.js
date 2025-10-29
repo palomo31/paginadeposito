@@ -2,25 +2,17 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
-const nodemailer = require("nodemailer");
 const fs = require("fs");
+const { Resend } = require("resend"); // ✅ Usa el SDK oficial de Resend
 
 const app = express();
 const DB_PATH = path.join(__dirname, "data", "db.sqlite");
-const OWNER_EMAIL = "alquilerequipos224@gmail.com"; // <-- sigue siendo tu correo
+const OWNER_EMAIL = "alquilerequipos224@gmail.com"; // <--- correo donde recibes cotizaciones
 
 // -----------------------------
-// CONFIGURAR RESEND SMTP
+// CONFIGURAR RESEND API
 // -----------------------------
-const transporter = nodemailer.createTransport({
-  host: "smtp.resend.com",
-  port: 587,
-  secure: false,
-  auth: {
-    user: "resend", // fijo
-    pass: process.env.RESEND_API_KEY, // configurado en Render
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY); // ✅ Render debe tener esta variable configurada
 
 // -----------------------------
 // CONFIGURACIÓN GENERAL
@@ -58,7 +50,6 @@ db.serialize(() => {
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 
-  // limpiar y volver a llenar
   db.run("DELETE FROM products", [], (err) => {
     if (err) console.error(err);
     else console.log("🗑️ Productos antiguos borrados.");
@@ -139,14 +130,16 @@ app.post("/api/quote", async (req, res) => {
 
   stmt.finalize();
 
- try {
-  await transporter.sendMail({
-      from: "Cotizaciones Web <alquilerequipos224@gmail.com>", // <--- ESTA ES LA LÍNEA CLAVE
-      to: OWNER_EMAIL,
+  // -----------------------------
+  // ENVÍO DE CORREO CON RESEND
+  // -----------------------------
+  try {
+    await resend.emails.send({
+      from: "Cotizaciones Web <alquilerequipos224@gmail.com>", // correo remitente
+      to: OWNER_EMAIL, // donde recibes las cotizaciones
       subject: `Nueva cotización de ${q.name}`,
-      text: emailText
-  });
-
+      text: emailText,
+    });
 
     res.json({ success: true });
   } catch (err) {
