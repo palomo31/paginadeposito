@@ -135,7 +135,7 @@ app.post("/api/quote", async (req, res) => {
   // -----------------------------
   try {
     await resend.emails.send({
-      from: "Cotizaciones Web <onboarding@resend.dev>", // correo remitente
+      from: "Cotizaciones Web <'onboarding@resend.dev'>", // correo remitente
       to: OWNER_EMAIL, // donde recibes las cotizaciones
       subject: `Nueva cotización de ${q.name}`,
       text: emailText,
