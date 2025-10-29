@@ -141,7 +141,7 @@ app.post("/api/quote", async (req, res) => {
 
  try {
   await transporter.sendMail({
-      from: "Cotizaciones Web <onboarding@resend.dev>", // <--- ESTA ES LA LÍNEA CLAVE
+      from: "Cotizaciones Web <alquilerequipos224@gmail.com>", // <--- ESTA ES LA LÍNEA CLAVE
       to: OWNER_EMAIL,
       subject: `Nueva cotización de ${q.name}`,
       text: emailText
