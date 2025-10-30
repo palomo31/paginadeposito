@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
 const fs = require("fs");
-const { Resend } = require("resend");
+const nodemailer = require("nodemailer");
 
 // -----------------------------
 // CONFIGURACIÓN GENERAL
@@ -22,23 +22,30 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 // -----------------------------
-// CONFIGURAR RESEND API
+// CONFIGURAR NODEMAILER CON GMAIL
 // -----------------------------
-const resend = new Resend(process.env.RESEND_API_KEY);
-console.log("🔑 RESEND_API_KEY cargada:", process.env.RESEND_API_KEY ? "Sí ✅" : "No ❌");
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "alquilerequipos224@gmail.com", // tu correo Gmail
+    pass: process.env.GMAIL_APP_PASSWORD, // clave de aplicación
+  },
+});
 
-// 🔹 Probar conexión automática con Resend
+console.log("🔑 GMAIL_APP_PASSWORD cargada:", process.env.GMAIL_APP_PASSWORD ? "Sí ✅" : "No ❌");
+
+// 🔹 Probar conexión automática con Gmail
 (async () => {
   try {
-    await resend.emails.send({
-      from: "Cotizaciones Web <onboarding@resend.dev>",
+    await transporter.sendMail({
+      from: "Cotizaciones Web <alquilerequipos224@gmail.com>",
       to: OWNER_EMAIL,
-      subject: "📬 Prueba directa desde Render",
-      text: "✅ Si ves este correo, la conexión con Resend está funcionando correctamente.",
+      subject: "📬 Prueba directa desde Render con Gmail",
+      text: "✅ Si ves este correo, la conexión con Gmail SMTP está funcionando correctamente.",
     });
-    console.log("✅ Correo de prueba enviado correctamente a través de Resend");
+    console.log("✅ Correo de prueba enviado correctamente a través de Gmail");
   } catch (error) {
-    console.error("❌ Error en la prueba de Resend:", error.message);
+    console.error("❌ Error en la prueba de Gmail:", error.message);
   }
 })();
 
@@ -157,8 +164,8 @@ app.post("/api/quote", async (req, res) => {
   try {
     console.log("📧 Enviando correo a:", OWNER_EMAIL);
 
-    await resend.emails.send({
-      from: "Cotizaciones Web <onboarding@resend.dev>",
+    await transporter.sendMail({
+      from: "Cotizaciones Web <alquilerequipos224@gmail.com>",
       to: OWNER_EMAIL,
       subject: `Nueva cotización de ${q.name}`,
       text: emailText,
