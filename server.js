@@ -9,8 +9,12 @@ const app = express();
 const DB_PATH = path.join(__dirname, "data", "db.sqlite");
 const OWNER_EMAIL = "alquilerequipos224@gmail.com";
 
+// 🟢 Muy importante: permite que Express lea JSON desde el cuerpo de las peticiones
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // -----------------------------
-// CONFIGURAR RESEND API
+// CONFIGURAR RESEND API    
 // -----------------------------
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -34,7 +38,7 @@ app.post("/api/quote", async (req, res) => {
       `,
     });
 
-    res.json({ success: true });
+    res.json({ success: true });    
   } catch (error) {
     console.error("❌ Error enviando correo:", error.message);
     res.status(500).json({ success: false, error: error.message });
