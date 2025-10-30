@@ -201,7 +201,7 @@ sendQuoteBtn.addEventListener('click', async () => {
 
   sendMsg.textContent = "Enviando cotización...";
   try {
-    const res = await fetch('/api/quote', {
+    const res = await fetch('https://pagina1-0.onrender.com/api/quote', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
