@@ -1,9 +1,13 @@
+// ------------------------------
 // Variables y elementos
+// ------------------------------
 const pages = document.querySelectorAll('.page');
 const navLinks = document.querySelectorAll('.nav a');
 const productList = document.getElementById('product-list');
 
+// ------------------------------
 // Navegación entre páginas con fade-in
+// ------------------------------
 navLinks.forEach(link => {
   link.addEventListener('click', e => {
     e.preventDefault();
@@ -20,15 +24,17 @@ navLinks.forEach(link => {
   });
 });
 
-// Mostrar siempre la página de inicio al cargar
-document.addEventListener('DOMContentLoaded', () => {
+// ------------------------------
+// Mostrar la página de inicio al cargar (sin interferir con navegación)
+// ------------------------------
+window.addEventListener('load', () => {
   pages.forEach(p => p.classList.add('hidden'));
   const homePage = document.getElementById('home-page');
   if (homePage) {
     homePage.classList.remove('hidden');
     homePage.classList.add('active');
   }
-}); 
+});
 
 // ------------------------------
 // Cargar productos desde API
@@ -69,6 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!track || items.length === 0) return;
 
+  // Duplicar el contenido para efecto infinito
   track.innerHTML += track.innerHTML;
   let speed = 2;
   let position = 0;
@@ -83,9 +90,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   animate();
 
+  // Detener animación al pasar el mouse
   track.parentElement.addEventListener('mouseenter', () => speed = 0);
   track.parentElement.addEventListener('mouseleave', () => speed = 2);
 
+  // Botones manuales
   nextBtn.addEventListener('click', () => {
     position -= 200;
     track.style.transform = `translateX(${position}px)`;
