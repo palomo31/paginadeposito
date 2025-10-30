@@ -17,6 +17,19 @@ app.use(express.urlencoded({ extended: true }));
 // CONFIGURAR RESEND API    
 // -----------------------------
 const resend = new Resend(process.env.RESEND_API_KEY);
+(async () => {
+  try {
+    await resend.emails.send({
+      from: "Cotizaciones Web <onboarding@resend.dev>",
+      to: "alquilerequipos224@gmail.com",
+      subject: "📬 Prueba directa desde Render",
+      text: "✅ Si ves este correo, la conexión con Resend está funcionando correctamente.",
+    });
+    console.log("✅ Correo de prueba enviado correctamente a través de Resend");
+  } catch (error) {
+    console.error("❌ Error en la prueba de Resend:", error.message);
+  }
+})();
 
 // ✅ Verificar conexión con Resend
 app.post("/api/quote", async (req, res) => {
