@@ -6,57 +6,28 @@ const bodyParser = require("body-parser");
 const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
 const fs = require("fs");
-const nodemailer = require("nodemailer");
 
 // -----------------------------
 // CONFIGURACIÓN GENERAL
 // -----------------------------
 const app = express();
 const DB_PATH = path.join(__dirname, "data", "db.sqlite");
-const OWNER_EMAIL = "alquilerequipos224@gmail.com";
 
-// Permite leer JSON en las peticiones
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 // -----------------------------
-// CONFIGURAR NODEMAILER CON GMAIL
-// -----------------------------
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: "alquilerequipos224@gmail.com", // tu correo Gmail
-    pass: process.env.GMAIL_APP_PASSWORD, // clave de aplicación
-  },
-});
-
-console.log("🔑 GMAIL_APP_PASSWORD cargada:", process.env.GMAIL_APP_PASSWORD ? "Sí ✅" : "No ❌");
-
-// 🔹 Probar conexión automática con Gmail
-(async () => {
-  try {
-    await transporter.sendMail({
-      from: "Cotizaciones Web <alquilerequipos224@gmail.com>",
-      to: OWNER_EMAIL,
-      subject: "📬 Prueba directa desde Render con Gmail",
-      text: "✅ Si ves este correo, la conexión con Gmail SMTP está funcionando correctamente.",
-    });
-    console.log("✅ Correo de prueba enviado correctamente a través de Gmail");
-  } catch (error) {
-    console.error("❌ Error en la prueba de Gmail:", error.message);
-  }
-})();
-
-// -----------------------------
-// BASE DE DATOS
+// BASE DE DATOS (solo productos)
 // -----------------------------
 if (!fs.existsSync(path.join(__dirname, "data"))) fs.mkdirSync(path.join(__dirname, "data"));
 
 const db = new sqlite3.Database(DB_PATH);
 
 db.serialize(() => {
+  // Crear tabla de productos si no existe
   db.run(`CREATE TABLE IF NOT EXISTS products (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT,
@@ -65,20 +36,7 @@ db.serialize(() => {
     image TEXT
   )`);
 
-  db.run(`CREATE TABLE IF NOT EXISTS quotes (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    product_id INTEGER,
-    product_title TEXT,
-    quantity INTEGER,
-    date_from TEXT,
-    date_to TEXT,
-    name TEXT,
-    phone TEXT,
-    email TEXT,
-    message TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-  )`);
-
+  // Limpiar e insertar productos de ejemplo
   db.run("DELETE FROM products", [], (err) => {
     if (err) console.error(err);
     else console.log("🗑️ Productos antiguos borrados.");
@@ -120,63 +78,6 @@ app.get("/api/products", (req, res) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(rows);
   });
-});
-
-// -----------------------------
-// API COTIZACIÓN
-// -----------------------------
-app.post("/api/quote", async (req, res) => {
-  console.log("📨 /api/quote recibida:", JSON.stringify(req.body, null, 2).slice(0, 1000));
-
-  const q = req.body;
-
-  if (!q.products || !Array.isArray(q.products) || q.products.length === 0)
-    return res.status(400).json({ error: "Faltan productos" });
-
-  if (!q.name || !q.phone || !q.email)
-    return res.status(400).json({ error: "Faltan datos del cliente" });
-
-  const stmt = db.prepare(`INSERT INTO quotes 
-    (product_id, product_title, quantity, date_from, date_to, name, phone, email, message)
-    VALUES (?,?,?,?,?,?,?,?,?)`
-  );
-
-  let emailText = `📋 NUEVA COTIZACIÓN\n\nCliente: ${q.name}\nTeléfono: ${q.phone}\nEmail: ${q.email}\nMensaje: ${q.message || "-"}\n\nProductos:\n`;
-
-  q.products.forEach(p => {
-    stmt.run(
-      p.id,
-      p.title,
-      p.qty || 1,
-      p.date_from || "-",
-      p.date_to || "-",
-      q.name,
-      q.phone,
-      q.email,
-      q.message || ""
-    );
-
-    emailText += `- ${p.title}\n  Cantidad: ${p.qty || 1}\n  Desde: ${p.date_from || "-"} Hasta: ${p.date_to || "-"}\n  Subtotal: $${p.subtotal?.toLocaleString() || "-"}\n`;
-  });
-
-  stmt.finalize();
-
-  try {
-    console.log("📧 Enviando correo a:", OWNER_EMAIL);
-
-    await transporter.sendMail({
-      from: "Cotizaciones Web <alquilerequipos224@gmail.com>",
-      to: OWNER_EMAIL,
-      subject: `Nueva cotización de ${q.name}`,
-      text: emailText,
-    });
-
-    console.log("✅ Correo enviado correctamente a", OWNER_EMAIL);
-    res.json({ success: true });
-  } catch (err) {
-    console.error("❌ Error al enviar correo:", err);
-    res.status(500).json({ success: false, error: err.message });
-  }
 });
 
 // -----------------------------
