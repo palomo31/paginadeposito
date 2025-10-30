@@ -1,101 +1,109 @@
-// Variables y elementos
+// ============================
+// Navegación entre secciones
+// ============================
+
+// Seleccionamos todas las secciones y los links del menú
 const pages = document.querySelectorAll('.page');
 const navLinks = document.querySelectorAll('.nav a');
-const productList = document.getElementById('product-list');
 
-// Navegación entre páginas con efecto suave
+// Cuando se hace clic en "Inicio" o "Equipos"
 navLinks.forEach(link => {
   link.addEventListener('click', e => {
     e.preventDefault();
-    const pageId = e.target.dataset.page;
 
-    pages.forEach(p => {
-      p.classList.add('hidden');
-      p.classList.remove('active');
+    const targetPage = e.target.dataset.page; // home-page o products-page
+
+    // Oculta todas las secciones
+    pages.forEach(page => {
+      page.classList.add('hidden');
+      page.classList.remove('active');
     });
 
-    const page = document.getElementById(pageId);
-    if (page) {
-      page.classList.remove('hidden');
-      setTimeout(() => page.classList.add('active'), 50);
-    }
-
-    // Si se va a la página de productos, recarga los equipos
-    if (pageId === 'products-page') {
-      loadProducts();
+    // Muestra la que corresponde
+    const selected = document.getElementById(targetPage);
+    if (selected) {
+      selected.classList.remove('hidden');
+      setTimeout(() => selected.classList.add('active'), 50);
     }
   });
 });
 
-// Mostrar solo la página de inicio al cargar
-window.addEventListener('load', () => {
-  pages.forEach(p => p.classList.add('hidden'));
+// Mostrar siempre "Inicio" al cargar
+document.addEventListener('DOMContentLoaded', () => {
   const homePage = document.getElementById('home-page');
   if (homePage) {
+    pages.forEach(p => p.classList.add('hidden'));
     homePage.classList.remove('hidden');
     homePage.classList.add('active');
   }
 });
 
-// ------------------------------
+
+// ============================
 // Cargar productos desde API
-// ------------------------------
-let products = [];
+// ============================
 
 async function loadProducts() {
-  try {
-    const res = await fetch('https://pagina1-0.onrender.com/api/products');
-    products = await res.json();
+  const productList = document.getElementById('product-list');
+  if (!productList) return;
 
-    if (productList) {
-      productList.innerHTML = products.map(p => `
-        <div class="card">
-          <img src="${p.image || '/imagenes/default.png'}" alt="${p.title}">
-          <h3>${p.title}</h3>
-          <p>${p.description || '-'}</p>
-          <p class="price">$${p.price_per_day.toLocaleString()} / día</p>
-        </div>
-      `).join('');
-    }
+  try {
+    const res = await fetch('/api/products');
+    const products = await res.json();
+
+    productList.innerHTML = products.map(p => `
+      <div class="card">
+        <img src="${p.image || '/imagenes/default.png'}" alt="${p.title}">
+        <h3>${p.title}</h3>
+        <p>${p.description || '-'}</p>
+        <p class="price">$${p.price_per_day.toLocaleString()} / día</p>
+      </div>
+    `).join('');
   } catch (err) {
     console.error('Error cargando productos:', err);
-    if (productList) productList.innerHTML = '<p>Error cargando productos.</p>';
+    productList.innerHTML = '<p>Error cargando productos.</p>';
   }
 }
 
-// ------------------------------
-// Carrusel de productos destacados
-// ------------------------------
-window.addEventListener("load", () => {
+document.addEventListener('DOMContentLoaded', loadProducts);
+
+
+// ============================
+// Carrusel de la página de inicio
+// ============================
+
+document.addEventListener('DOMContentLoaded', () => {
   const track = document.querySelector('.carousel-track');
+  if (!track) return;
+
   const items = Array.from(document.querySelectorAll('.carousel-item'));
   const prevBtn = document.querySelector('.carousel-btn.prev');
   const nextBtn = document.querySelector('.carousel-btn.next');
 
-  if (!track || items.length === 0) return;
-
+  // Duplicamos para scroll infinito
   track.innerHTML += track.innerHTML;
-  let speed = 2;
   let position = 0;
+  let speed = 2;
 
   function animate() {
     position -= speed;
-    const trackWidth = track.scrollWidth / 2;
-    if (-position >= trackWidth) position = 0;
+    const width = track.scrollWidth / 2;
+    if (-position >= width) position = 0;
     track.style.transform = `translateX(${position}px)`;
     requestAnimationFrame(animate);
   }
 
   animate();
 
+  // Pausar cuando el usuario pasa el mouse
   track.parentElement.addEventListener('mouseenter', () => speed = 0);
   track.parentElement.addEventListener('mouseleave', () => speed = 2);
 
+  // Botones manuales
   nextBtn.addEventListener('click', () => {
     position -= 200;
     track.style.transform = `translateX(${position}px)`;
   });
-
   prevBtn.addEventListener('click', () => {
     position += 200;
     track.style.transform = `translateX(${position}px)`;
