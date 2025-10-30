@@ -3,16 +3,31 @@ const bodyParser = require("body-parser");
 const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
 const fs = require("fs");
-const { Resend } = require("resend"); // ✅ Usa el SDK oficial de Resend
+const { Resend } = require("resend");
 
 const app = express();
 const DB_PATH = path.join(__dirname, "data", "db.sqlite");
-const OWNER_EMAIL = "alquilerequipos224@gmail.com"; // <--- correo donde recibes cotizaciones
+const OWNER_EMAIL = "alquilerequipos224@gmail.com";
 
 // -----------------------------
 // CONFIGURAR RESEND API
 // -----------------------------
-const resend = new Resend(process.env.RESEND_API_KEY); // ✅ Render debe tener esta variable configurada
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+// ✅ Verificar conexión con Resend
+(async () => {
+  try {
+    await resend.emails.send({
+      from: "Cotizaciones Web <onboarding@resend.dev>",
+      to: "test@resend.dev",
+      subject: "Verificación inicial Resend",
+      text: "✅ Conexión con Resend verificada correctamente (mensaje de prueba interno).",
+    });
+    console.log("✅ Resend API verificada correctamente.");
+  } catch (error) {
+    console.error("⚠️ Error verificando Resend API:", error.message);
+  }
+})();
 
 // -----------------------------
 // CONFIGURACIÓN GENERAL
@@ -62,7 +77,7 @@ db.serialize(() => {
       ["Teleras de 45", "Teleras medianas", 400, "/imagenes/telerapequeña.png"],
       ["Andamios", "Andamios completos", 5000, "/imagenes/andamio.png"],
       ["Tijeras", "Tijeras de soporte", 0, "/imagenes/tijeras.png"],
-      ["Canes", "Canes metálicos", 1000, "/imagenes/canes.png"],
+      ["Canes", "Canes metálicos", 1000, "/imagenes/caness.png"],
       ["Formaletas", "Formaleta", 30000, "/imagenes/formaletas.png"],
       ["Concretadoras", "Concretadoras ", 80000, "/imagenes/concretadoras.png"],
       ["Ranas", "Ranas", 60000, "/imagenes/rana.png"],
@@ -97,6 +112,8 @@ app.get("/api/products", (req, res) => {
 // API COTIZACIÓN
 // -----------------------------
 app.post("/api/quote", async (req, res) => {
+  console.log("📨 /api/quote recibida:", JSON.stringify(req.body, null, 2).slice(0, 1000));
+
   const q = req.body;
 
   if (!q.products || !Array.isArray(q.products) || q.products.length === 0)
@@ -130,17 +147,17 @@ app.post("/api/quote", async (req, res) => {
 
   stmt.finalize();
 
-  // -----------------------------
-  // ENVÍO DE CORREO CON RESEND
-  // -----------------------------
   try {
+    console.log("📧 Enviando correo a:", OWNER_EMAIL);
+
     await resend.emails.send({
-      from: "Cotizaciones Web <'onboarding@resend.dev'>", // correo remitente
-      to: OWNER_EMAIL, // donde recibes las cotizaciones
+      from: "Cotizaciones Web <onboarding@resend.dev>", // ✅ sin comillas internas
+      to: OWNER_EMAIL,
       subject: `Nueva cotización de ${q.name}`,
       text: emailText,
     });
 
+    console.log("✅ Correo enviado correctamente a", OWNER_EMAIL);
     res.json({ success: true });
   } catch (err) {
     console.error("❌ Error al enviar correo:", err);

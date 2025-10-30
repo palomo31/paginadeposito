@@ -15,7 +15,7 @@ body {
   color: var(--text);
 }
 
-/* Header / Nav */
+
 .header {
   background: var(--primary);
   color: #fff;
@@ -293,9 +293,9 @@ input:focus, select:focus, textarea:focus {
   100% { opacity: 0.9; transform: translateY(0); }
 }
 
-/* ------------------------------
+/* 
    Cards de productos modernas
-------------------------------- */
+ */
 .card {
   background: #fff;
   width: 280px;
@@ -377,10 +377,8 @@ input:focus, select:focus, textarea:focus {
   0% { opacity: 0; transform: translateY(20px); }
   100% { opacity: 1; transform: translateY(0); }
 }
-/* ------------------------------
-   Carrusel de productos
-/* GALERÍA DE PRODUCTOS
-/* ====== ESTILOS GENERALES ====== */
+
+/*estilo*/
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -430,7 +428,7 @@ h2.section-title {
   margin-bottom: 20px;
 }
 
-/* ====== CARRUSEL ====== */
+/*  CARRUSEL */
 .carousel-section {
   width: 100%;
   margin: auto;
@@ -565,7 +563,7 @@ h2.section-title {
   transform: translateY(-5px); /* animación sutil */
 }
 
-/* Animación al aparecer el carrusel */
+/* Animación pa el carrusel */
 .carousel-item {
   opacity: 0;
   transform: translateY(20px);
@@ -576,7 +574,7 @@ h2.section-title {
 .carousel-item:nth-child(2) { animation-delay: 0.1s; }
 .carousel-item:nth-child(3) { animation-delay: 0.15s; }
 .carousel-item:nth-child(4) { animation-delay: 0.2s; }
-/* Puedes seguir con más items aumentando el delay */
+
 
 @keyframes carouselItemEntrance {
   0% { opacity: 0; transform: translateY(20px); }

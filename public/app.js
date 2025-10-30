@@ -16,7 +16,6 @@ const sendMsg = document.getElementById('sendMsg');
 
 let products = [];
 let quoteItems = [];
-
 // Navegación entre páginas con fade-in
 
 navLinks.forEach(link => {
@@ -49,9 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
 // ------------------------------
 async function loadProducts() {
   try {
-    const res = await fetch('/api/products');
+    const res = await fetch('https://pagina1-0.onrender.com/.onrender.com/api/products'); // ✅ CORRECTO
     products = await res.json();
-
+    
     // Render tarjetas
     if (productList) {
       productList.innerHTML = products.map(p => `
