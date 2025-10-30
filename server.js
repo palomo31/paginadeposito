@@ -1,3 +1,6 @@
+// -----------------------------
+// DEPENDENCIAS
+// -----------------------------
 const express = require("express");
 const bodyParser = require("body-parser");
 const sqlite3 = require("sqlite3").verbose();
@@ -5,23 +8,31 @@ const path = require("path");
 const fs = require("fs");
 const { Resend } = require("resend");
 
+// -----------------------------
+// CONFIGURACIÓN GENERAL
+// -----------------------------
 const app = express();
 const DB_PATH = path.join(__dirname, "data", "db.sqlite");
 const OWNER_EMAIL = "alquilerequipos224@gmail.com";
 
-// 🟢 Muy importante: permite que Express lea JSON desde el cuerpo de las peticiones
+// Permite leer JSON en las peticiones
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, "public")));
 
 // -----------------------------
-// CONFIGURAR RESEND API    
+// CONFIGURAR RESEND API
 // -----------------------------
 const resend = new Resend(process.env.RESEND_API_KEY);
+console.log("🔑 RESEND_API_KEY cargada:", process.env.RESEND_API_KEY ? "Sí ✅" : "No ❌");
+
+// 🔹 Probar conexión automática con Resend
 (async () => {
   try {
     await resend.emails.send({
       from: "Cotizaciones Web <onboarding@resend.dev>",
-      to: "alquilerequipos224@gmail.com",
+      to: OWNER_EMAIL,
       subject: "📬 Prueba directa desde Render",
       text: "✅ Si ves este correo, la conexión con Resend está funcionando correctamente.",
     });
@@ -31,44 +42,11 @@ const resend = new Resend(process.env.RESEND_API_KEY);
   }
 })();
 
-// ✅ Verificar conexión con Resend
-app.post("/api/quote", async (req, res) => {
-  const { products, name, phone, email, message } = req.body;
-
-  try {
-    await resend.emails.send({
-      from: "Cotizaciones Web <onboarding@resend.dev>",
-      to: "alquilerequipos224@gmail.com",  // tu correo real
-      subject: `Nueva cotización de ${name}`,
-      html: `
-        <h3>Nueva cotización</h3>
-        <p><b>Nombre:</b> ${name}</p>
-        <p><b>Teléfono:</b> ${phone}</p>
-        <p><b>Correo:</b> ${email}</p>
-        <p><b>Mensaje:</b> ${message}</p>
-        <h4>Productos:</h4>
-        <ul>${products.map(p => `<li>${p.qty}x ${p.title} - $${p.subtotal}</li>`).join("")}</ul>
-      `,
-    });
-
-    res.json({ success: true });    
-  } catch (error) {
-    console.error("❌ Error enviando correo:", error.message);
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
-
-// -----------------------------
-// CONFIGURACIÓN GENERAL
-// -----------------------------
-app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, "public")));
-
-if (!fs.existsSync(path.join(__dirname, "data"))) fs.mkdirSync(path.join(__dirname, "data"));
-
 // -----------------------------
 // BASE DE DATOS
 // -----------------------------
+if (!fs.existsSync(path.join(__dirname, "data"))) fs.mkdirSync(path.join(__dirname, "data"));
+
 const db = new sqlite3.Database(DB_PATH);
 
 db.serialize(() => {
@@ -180,7 +158,7 @@ app.post("/api/quote", async (req, res) => {
     console.log("📧 Enviando correo a:", OWNER_EMAIL);
 
     await resend.emails.send({
-      from: "Cotizaciones Web <onboarding@resend.dev>", // ✅ sin comillas internas
+      from: "Cotizaciones Web <onboarding@resend.dev>",
       to: OWNER_EMAIL,
       subject: `Nueva cotización de ${q.name}`,
       text: emailText,
@@ -201,5 +179,8 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
+// -----------------------------
+// INICIO DEL SERVIDOR
+// -----------------------------
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`✅ Servidor corriendo en el puerto ${PORT}`));
