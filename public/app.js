@@ -1,32 +1,33 @@
-// ------------------------------
 // Variables y elementos
-// ------------------------------
 const pages = document.querySelectorAll('.page');
 const navLinks = document.querySelectorAll('.nav a');
 const productList = document.getElementById('product-list');
 
-// ------------------------------
-// Navegación entre páginas con fade-in
-// ------------------------------
+// Navegación entre páginas con efecto suave
 navLinks.forEach(link => {
   link.addEventListener('click', e => {
     e.preventDefault();
     const pageId = e.target.dataset.page;
 
     pages.forEach(p => {
-      p.classList.remove('active');   
       p.classList.add('hidden');
+      p.classList.remove('active');
     });
 
     const page = document.getElementById(pageId);
-    page.classList.remove('hidden');
-    setTimeout(() => page.classList.add('active'), 50);
+    if (page) {
+      page.classList.remove('hidden');
+      setTimeout(() => page.classList.add('active'), 50);
+    }
+
+    // Si se va a la página de productos, recarga los equipos
+    if (pageId === 'products-page') {
+      loadProducts();
+    }
   });
 });
 
-// ------------------------------
-// Mostrar la página de inicio al cargar (sin interferir con navegación)
-// ------------------------------
+// Mostrar solo la página de inicio al cargar
 window.addEventListener('load', () => {
   pages.forEach(p => p.classList.add('hidden'));
   const homePage = document.getElementById('home-page');
@@ -62,12 +63,10 @@ async function loadProducts() {
   }
 }
 
-loadProducts();
-
 // ------------------------------
 // Carrusel de productos destacados
 // ------------------------------
-document.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("load", () => {
   const track = document.querySelector('.carousel-track');
   const items = Array.from(document.querySelectorAll('.carousel-item'));
   const prevBtn = document.querySelector('.carousel-btn.prev');
@@ -75,7 +74,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!track || items.length === 0) return;
 
-  // Duplicar el contenido para efecto infinito
   track.innerHTML += track.innerHTML;
   let speed = 2;
   let position = 0;
@@ -90,11 +88,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   animate();
 
-  // Detener animación al pasar el mouse
   track.parentElement.addEventListener('mouseenter', () => speed = 0);
   track.parentElement.addEventListener('mouseleave', () => speed = 2);
 
-  // Botones manuales
   nextBtn.addEventListener('click', () => {
     position -= 200;
     track.style.transform = `translateX(${position}px)`;
