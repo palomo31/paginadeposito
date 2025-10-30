@@ -15,19 +15,31 @@ const OWNER_EMAIL = "alquilerequipos224@gmail.com";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 // ✅ Verificar conexión con Resend
-(async () => {
+app.post("/api/quote", async (req, res) => {
+  const { products, name, phone, email, message } = req.body;
+
   try {
     await resend.emails.send({
       from: "Cotizaciones Web <onboarding@resend.dev>",
-      to: "test@resend.dev",
-      subject: "Verificación inicial Resend",
-      text: "✅ Conexión con Resend verificada correctamente (mensaje de prueba interno).",
+      to: "alquilerequipos224@gmail.com",  // tu correo real
+      subject: `Nueva cotización de ${name}`,
+      html: `
+        <h3>Nueva cotización</h3>
+        <p><b>Nombre:</b> ${name}</p>
+        <p><b>Teléfono:</b> ${phone}</p>
+        <p><b>Correo:</b> ${email}</p>
+        <p><b>Mensaje:</b> ${message}</p>
+        <h4>Productos:</h4>
+        <ul>${products.map(p => `<li>${p.qty}x ${p.title} - $${p.subtotal}</li>`).join("")}</ul>
+      `,
     });
-    console.log("✅ Resend API verificada correctamente.");
+
+    res.json({ success: true });
   } catch (error) {
-    console.error("⚠️ Error verificando Resend API:", error.message);
+    console.error("❌ Error enviando correo:", error.message);
+    res.status(500).json({ success: false, error: error.message });
   }
-})();
+});
 
 // -----------------------------
 // CONFIGURACIÓN GENERAL
