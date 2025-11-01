@@ -104,3 +104,17 @@ document.addEventListener("DOMContentLoaded", () => {
     track.style.transform = `translateX(${position}px)`;
   });
 });
+// ================================
+// 📱 Menú Hamburguesa (Móvil)
+// ================================
+document.addEventListener("DOMContentLoaded", () => {
+  const menuBtn = document.querySelector(".menu");
+  const nav = document.querySelector(".nav");
+
+  if (menuBtn && nav) {
+    menuBtn.addEventListener("click", () => {
+      nav.classList.toggle("active");
+      menuBtn.classList.toggle("active");
+    });
+  }
+});
