@@ -685,3 +685,97 @@ h2.section-title {
     font-size: 0.9em;
   }
 }
+/* ----- MENÚ RESPONSIVE (CELULAR) ----- */
+.menu {
+  display: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
+.nav.active {
+  display: flex;
+  flex-direction: column;
+  background: var(--primary);
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 100%;
+  padding: 15px 0;
+}
+
+.nav.active a {
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
+  border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+/* Vista móvil */
+@media (max-width: 768px) {
+  .nav {
+    display: none;
+  }
+
+  .menu {
+    display: block;
+  }
+}
+/* ----- MENÚ RESPONSIVE (CELULAR CON ANIMACIÓN) ----- */
+.menu {
+  display: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
+/* Estado visible del menú */
+.nav.active {
+  display: flex;
+  flex-direction: column;
+  background: var(--primary);
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 100%;
+  padding: 15px 0;
+  z-index: 1000;
+
+  /* Animación */
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Estado oculto del menú (por defecto en móvil) */
+@media (max-width: 768px) {
+  .nav {
+    display: flex;
+    flex-direction: column;
+    background: var(--primary);
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    padding: 15px 0;
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .nav a {
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    border-top: 1px solid rgba(255,255,255,0.2);
+  }
+
+  .menu {
+    display: block;
+  }
+
+  .nav.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+}

@@ -118,3 +118,24 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+// ------------------------------
+// Menú responsive (para celular)
+// ------------------------------
+document.addEventListener("DOMContentLoaded", () => {
+  const menuBtn = document.querySelector(".menu");
+  const nav = document.querySelector(".nav");
+
+  if (menuBtn && nav) {
+    menuBtn.addEventListener("click", () => {
+      nav.classList.toggle("active");
+    });
+
+    // Cerrar el menú al tocar un enlace
+    nav.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        nav.classList.remove("active");
+      });
+    });
+  }
+});
+
