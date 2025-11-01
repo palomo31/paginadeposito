@@ -1,5 +1,5 @@
 :root {
-  --primary: #0077b6;
+  --primary:  #0077b6;
   --secondary: #f77f00;
   --bg: #f0f4f8;
   --text: #03045e;
@@ -7,15 +7,15 @@
 }
 
 /* Reset y globales */
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; }
 body {
   font-family: "Poppins", sans-serif;
+  margin: 0;
   background: var(--bg);
   color: var(--text);
-  overflow-x: hidden;
 }
 
-/* Header */
+
 .header {
   background: var(--primary);
   color: #fff;
@@ -23,11 +23,8 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 12px 20px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
+  position: sticky; top: 0; z-index: 10;
 }
-
 .logo { font-weight: 700; font-size: 1.4em; }
 .nav a {
   color: #fff;
@@ -35,14 +32,232 @@ body {
   text-decoration: none;
   font-weight: 500;
 }
-
-.menu {
-  display: none;
-  font-size: 1.8em;
-  cursor: pointer;
-}
+.menu { display: none; cursor: pointer; }
 
 /* Hero */
+.hero {
+  padding: 60px 20px;
+  text-align: center;
+  background: linear-gradient(135deg,#0077b6,#00b4d8);
+  color: #fff;
+  border-radius: 10px;
+  margin: 20px;
+}
+.hero h1 { font-size: 2.2em; margin-bottom: 12px; }
+.hero p { font-size: 1.2em; }
+
+/* Contenedores */
+.container { max-width: 1100px; margin: 20px auto; padding: 20px; }
+.grid { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+
+/* Cards de productos */
+.card {
+  background: #fff; width: 280px; border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15); overflow: hidden;
+  transition: transform 0.3s;
+}
+.card:hover { transform: translateY(-5px); }
+.card img { width: 100%; height: 180px; object-fit: cover; }
+.card h3 { margin: 12px 0 6px 0; color: var(--primary); }
+.card p { margin: 6px 0; }
+.card .price { font-weight: 700; margin-top: 6px; }
+.card button {
+  width: 100%;
+  padding: 10px 0;
+  border: none;
+  background: var(--secondary);
+  color: #fff;
+  cursor: pointer;
+  border-radius: 0 0 10px 10px;
+  transition: background 0.3s;
+}
+.card button:hover { background: var(--btn-hover); }
+
+/* Secciones */
+.page.hidden { display: none !important; }
+
+/* Formulario y cotización */
+.quote-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+/* Formulario de agregar productos */
+.quote-form {
+  flex: 1 1 320px;
+  background: #f9fafc;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.form-row {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-row label {
+  font-weight: 600;
+  color: #1f3a5f;
+  margin-bottom: .4rem;
+}
+
+.form-row input,
+.form-row select {
+  padding: .5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.btn-add {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: .7rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background .3s;
+  width: 100%;
+}
+.btn-add:hover { background: #005fa3; }
+
+/* Resumen de cotización */
+.quote-summary {
+  flex: 2 1 400px;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.quote-summary h3 {
+  margin-bottom: .8rem;
+  color: #1f3a5f;
+}
+
+.quote-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.quote-table th, .quote-table td {
+  padding: .6rem;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+}
+
+.quote-total {
+  text-align: right;
+  margin-top: 1rem;
+  font-size: 1.1rem;
+}
+
+.btn-send {
+  background: var(--secondary);
+  color: white;
+  border: none;
+  padding: .9rem 1.4rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 1rem;
+  width: 100%;
+  transition: background .3s;
+}
+.btn-send:hover { background: #e36b00; }
+
+.form-msg {
+  margin-top: .5rem;
+  color: #0077cc;
+  font-size: .9rem;
+}
+
+/* Formulario de cliente */
+.contact-form {
+  margin-top: 2rem;
+  background: #fefefe;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.contact-form h3 { color: #1f3a5f; margin-bottom: 1rem; }
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+/* Divisor */
+.divider { margin: 2rem 0; border: none; border-top: 1px solid #ddd; }
+
+/* Footer */
+.footer {
+  background: var(--primary);
+  color: #fff;
+  text-align: center;
+  padding: 12px;
+}
+
+/* Responsive */
+@media(max-width:768px){
+  .nav{display:none;}
+  .menu{display:block;}
+  .grid{flex-direction:column; align-items:center;}
+  .card{width:90%;}
+  .quote-container{flex-direction:column;}
+  .quote-summary, .quote-form{flex: 1 1 100%;}
+}
+/* Animación de páginas */
+.page {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  display: none; /* Ya estaba hidden */
+}
+
+.page.active {
+  display: block;
+  opacity: 1;
+}
+/* Animación al agregar producto a cotización */
+.highlight {
+  animation: highlightAnim 1s ease;
+}
+
+@keyframes highlightAnim {
+  0% { background-color: #d4edda; }
+  50% { background-color: #fff; }
+  100% { background-color: #fff; }
+}
+.card button {
+  width: 100%;
+  padding: 10px 0;
+  border: none;
+  background: var(--secondary);
+  color: #fff;
+  cursor: pointer;
+  border-radius: 0 0 10px 10px;
+  transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+
+.card button:hover {
+  background: var(--btn-hover);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 5px rgba(0,119,182,0.5);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+/* ------------------------------
+   Hero moderno con animación
+------------------------------- */
 .hero {
   padding: 80px 20px;
   text-align: center;
@@ -50,53 +265,61 @@ body {
   color: #fff;
   border-radius: 15px;
   margin: 20px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  transform: translateY(0);
   animation: heroEntrance 1s ease-out;
 }
 
 .hero h1 {
-  font-size: 2.5em;
+  font-size: 2.8em;
   margin-bottom: 12px;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
 }
 
 .hero p {
-  font-size: 1.2em;
+  font-size: 1.3em;
   opacity: 0.9;
+  animation: heroTextFade 1.5s ease forwards;
 }
 
-/* Contenedores */
-.container {
-  max-width: 1100px;
-  margin: 20px auto;
-  padding: 20px;
+/* Animaciones */
+@keyframes heroEntrance {
+  0% { transform: translateY(-20px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
 }
 
-.grid {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  justify-content: center;
+@keyframes heroTextFade {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 0.9; transform: translateY(0); }
 }
 
-/* Cards */
+/* 
+   Cards de productos modernas
+ */
 .card {
   background: #fff;
   width: 280px;
   border-radius: 15px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
   overflow: hidden;
   transition: transform 0.3s, box-shadow 0.3s;
+  position: relative;
 }
 
 .card:hover {
   transform: translateY(-8px) scale(1.03);
-  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.25);
 }
 
 .card img {
   width: 100%;
   height: 180px;
   object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.card:hover img {
+  transform: scale(1.05);
 }
 
 .card h3 {
@@ -118,6 +341,7 @@ body {
   font-size: 1.05em;
 }
 
+/* Botón cotizar */
 .card button {
   width: 100%;
   padding: 10px 0;
@@ -127,13 +351,84 @@ body {
   cursor: pointer;
   border-radius: 0 0 15px 15px;
   font-weight: 600;
+  transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
 }
 
 .card button:hover {
   background: #e36b00;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
 }
 
-/* Carrusel */
+/* Animación al cargar las cards */
+.grid .card {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: cardEntrance 0.6s ease forwards;
+}
+
+.grid .card:nth-child(1) { animation-delay: 0.1s; }
+.grid .card:nth-child(2) { animation-delay: 0.2s; }
+.grid .card:nth-child(3) { animation-delay: 0.3s; }
+.grid .card:nth-child(4) { animation-delay: 0.4s; }
+/* ...puedes seguir aumentando el delay para más cards */
+
+@keyframes cardEntrance {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/*estilo*/
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f2f5f9;
+  color: #333;
+}
+
+header.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #004aad;
+  color: white;
+  padding: 15px 40px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.nav a {
+  color: white;
+  margin: 0 15px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.nav a:hover {
+  text-decoration: underline;
+}
+
+.menu {
+  display: none;
+}
+
+main {
+  padding: 20px;
+}
+
+h2.section-title {
+  text-align: center;
+  color: #004aad;
+  margin-bottom: 20px;
+}
+
+/*  CARRUSEL */
 .carousel-section {
   width: 100%;
   margin: auto;
@@ -141,7 +436,7 @@ body {
   background-color: #f8fafc;
   border-radius: 12px;
   padding: 20px 0;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 .carousel-container {
@@ -162,10 +457,8 @@ body {
   text-align: center;
   background: white;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   overflow: hidden;
-  transition: transform 0.4s ease;
-  cursor: pointer;
 }
 
 .carousel-item img {
@@ -175,83 +468,125 @@ body {
 }
 
 .carousel-caption {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 10px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Botones del carrusel */
+.carousel-btn {
   position: absolute;
-  bottom: -50px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0,0,0,0.5);
+  color: white;
+  border: none;
+  font-size: 2em;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 45px;
+  height: 45px;
+}
+
+.carousel-btn:hover {
+  background-color: #004aad;
+}
+
+.prev { left: 0; }
+.next { right: 0; }
+
+/* ------------------------------
+   Carrusel responsivo
+------------------------------- */
+@media(max-width: 1024px) {
+  .carousel-item { flex: 0 0 calc(33.33% - 20px); }
+}
+
+@media(max-width: 768px) {
+  .carousel-item { flex: 0 0 calc(50% - 20px); }
+  .carousel-btn { width: 35px; height: 35px; font-size: 1.5em; }
+}
+
+@media(max-width: 480px) {
+  .carousel-item { flex: 0 0 80%; }
+  .carousel-btn { width: 30px; height: 30px; font-size: 1.2em; }
+}
+
+/* ------------------------------
+   Carrusel moderno con animaciones al pasar el mouse
+------------------------------- */
+.carousel-item {
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 12px;
+}
+
+.carousel-item img {
+  display: block;
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.carousel-caption {
+  position: absolute;
+  bottom: -50px; /* Inicialmente escondido */
   width: 100%;
   padding: 10px;
   font-weight: bold;
   text-align: center;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0,0,0,0.6);
   color: #fff;
   font-size: 1em;
-  transition: all 0.4s ease;
+  transition: transform 0.4s ease, bottom 0.4s ease, background 0.4s ease;
+  border-radius: 0 0 12px 12px;
 }
 
-/* Footer */
-.footer {
-  background: var(--primary);
-  color: #fff;
-  text-align: center;
-  padding: 12px;
+/* Hover effects */
+.carousel-item:hover {
+  transform: rotateY(5deg) scale(1.05); /* giro 3D + zoom de la tarjeta */
+  box-shadow: 0 20px 35px rgba(0,0,0,0.3);
 }
 
-/* -------------------- */
-/* RESPONSIVE MÓVIL 📱 */
-/* -------------------- */
-@media (max-width: 900px) {
-  .logo {
-    font-size: 1.1em;
-  }
-
-  .hero {
-    padding: 60px 15px;
-    margin: 10px;
-  }
-
-  .hero h1 {
-    font-size: 1.8em;
-  }
-
-  .hero p {
-    font-size: 1em;
-  }
-
-  .carousel-item {
-    flex: 0 0 80%;
-  }
-
-  .grid {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .card {
-    width: 90%;
-  }
-
-  /* menú hamburguesa funcional */
-  .menu {
-    display: block;
-  }
-
-  .nav {
-    display: none;
-    flex-direction: column;
-    background: var(--primary);
-    position: absolute;
-    top: 60px;
-    right: 0;
-    width: 100%;
-    text-align: center;
-  }
-
-  .nav.active {
-    display: flex;
-  }
-
-  .nav a {
-    padding: 15px;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    font-size: 1.1em;
-  }
+.carousel-item:hover img {
+  transform: scale(1.15); /* zoom imagen */
 }
+
+.carousel-item:hover .carousel-caption {
+  bottom: 0; /* sube el caption */
+  background: rgba(0,0,0,0.8);
+  transform: translateY(-5px); /* animación sutil */
+}
+
+/* Animación pa el carrusel */
+.carousel-item {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: carouselItemEntrance 0.6s ease forwards;
+}
+
+.carousel-item:nth-child(1) { animation-delay: 0.05s; }
+.carousel-item:nth-child(2) { animation-delay: 0.1s; }
+.carousel-item:nth-child(3) { animation-delay: 0.15s; }
+.carousel-item:nth-child(4) { animation-delay: 0.2s; }
+
+
+@keyframes carouselItemEntrance {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.warning-box {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  margin: 15px 0 25px 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+} 
