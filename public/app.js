@@ -4,11 +4,12 @@
 
 const pages = document.querySelectorAll('.page');
 const navLinks = document.querySelectorAll('.nav a');
-
-// Control de menú hamburguesa
 const menuBtn = document.querySelector('.menu');
 const nav = document.querySelector('.nav');
-menuBtn.addEventListener('click', () => nav.classList.toggle('active'));
+
+if (menuBtn) {
+  menuBtn.addEventListener('click', () => nav.classList.toggle('active'));
+}
 
 navLinks.forEach(link => {
   link.addEventListener('click', e => {
@@ -16,43 +17,29 @@ navLinks.forEach(link => {
     const targetPage = e.target.dataset.page;
 
     // Oculta todas las secciones
-    pages.forEach(page => {
-      page.classList.add('hidden');
-      page.classList.remove('active');
-    });
+    pages.forEach(page => page.classList.add('hidden'));
 
     // Muestra la seleccionada
     const selected = document.getElementById(targetPage);
-    if (selected) {
-      selected.classList.remove('hidden');
-      setTimeout(() => selected.classList.add('active'), 50);
-    }
+    if (selected) selected.classList.remove('hidden');
 
-    // Cierra el menú en móvil
+    // Actualiza estado del menú
+    navLinks.forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
     nav.classList.remove('active');
   });
 });
 
-// ============================
-// Al cargar la página
-// ============================
-
 document.addEventListener('DOMContentLoaded', () => {
-  // Mostrar solo el inicio al principio
   const homePage = document.getElementById('home-page');
-  if (homePage) {
-    pages.forEach(p => p.classList.add('hidden'));
-    homePage.classList.remove('hidden');
-    homePage.classList.add('active');
-  }
-
-  // Cargar equipos y activar carrusel
+  if (homePage) homePage.classList.remove('hidden');
   loadProducts();
   iniciarCarrusel();
 });
 
+
 // ============================
-// Cargar productos desde la API
+// Cargar productos desde API
 // ============================
 
 async function loadProducts() {
@@ -60,8 +47,8 @@ async function loadProducts() {
   if (!productList) return;
 
   try {
-    const res = await fetch('/api/products');
-    if (!res.ok) throw new Error('Error al obtener productos');
+    const res = await fetch('/api/products', { cache: "no-store" });
+    if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
     const products = await res.json();
 
     if (products.length === 0) {
@@ -77,53 +64,41 @@ async function loadProducts() {
         <p class="price">$${p.price_per_day?.toLocaleString() || '0'} / día</p>
       </div>
     `).join('');
-  } catch (error) {
-    console.error('Error cargando productos:', error);
+  } catch (err) {
+    console.error('Error cargando productos:', err);
     productList.innerHTML = '<p>Error cargando productos desde el servidor.</p>';
   }
 }
 
+
 // ============================
-// Carrusel automático y manual
+// Carrusel automático
 // ============================
 
 function iniciarCarrusel() {
   const track = document.querySelector('.carousel-track');
   if (!track) return;
 
-  const prevBtn = document.querySelector('.carousel-btn.prev');
   const nextBtn = document.querySelector('.carousel-btn.next');
-
+  const prevBtn = document.querySelector('.carousel-btn.prev');
   let position = 0;
-  const speed = 1; // velocidad del movimiento automático
+  let speed = 1.5;
+  const width = track.scrollWidth / 2;
 
-  function moveCarousel() {
-    position -= speed;
-    if (Math.abs(position) >= track.scrollWidth / 2) {
-      position = 0;
-    }
-    track.style.transform = `translateX(${position}px)`;
-    requestAnimationFrame(moveCarousel);
-  }
-
-  // Duplicar contenido para scroll infinito
+  // duplicamos para efecto infinito
   track.innerHTML += track.innerHTML;
 
-  // Iniciar movimiento
-  moveCarousel();
-
-  // Pausar al pasar el mouse
-  track.parentElement.addEventListener('mouseenter', () => cancelAnimationFrame(moveCarousel));
-  track.parentElement.addEventListener('mouseleave', () => moveCarousel());
-
-  // Botones manuales
-  nextBtn.addEventListener('click', () => {
-    position -= 200;
+  function animar() {
+    position -= speed;
+    if (-position >= width) position = 0;
     track.style.transform = `translateX(${position}px)`;
-  });
+    requestAnimationFrame(animar);
+  }
+  animar();
 
-  prevBtn.addEventListener('click', () => {
-    position += 200;
-    track.style.transform = `translateX(${position}px)`;
-  });
+  track.parentElement.addEventListener('mouseenter', () => speed = 0);
+  track.parentElement.addEventListener('mouseleave', () => speed = 1.5);
+
+  nextBtn?.addEventListener('click', () => position -= 200);
+  prevBtn?.addEventListener('click', () => position += 200);
 }
