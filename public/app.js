@@ -33,20 +33,26 @@ navLinks.forEach(link => {
   });
 });
 
-// Mostrar siempre “Inicio” al cargar
+// ============================
+// Al cargar la página
+// ============================
+
 document.addEventListener('DOMContentLoaded', () => {
+  // Mostrar solo el inicio al principio
   const homePage = document.getElementById('home-page');
   if (homePage) {
     pages.forEach(p => p.classList.add('hidden'));
     homePage.classList.remove('hidden');
     homePage.classList.add('active');
   }
-  loadProducts(); // Se asegura de cargar productos al inicio
+
+  // Cargar equipos y activar carrusel
+  loadProducts();
+  iniciarCarrusel();
 });
 
-
 // ============================
-// Cargar productos desde API
+// Cargar productos desde la API
 // ============================
 
 async function loadProducts() {
@@ -55,7 +61,7 @@ async function loadProducts() {
 
   try {
     const res = await fetch('/api/products');
-    if (!res.ok) throw new Error('Respuesta no válida del servidor');
+    if (!res.ok) throw new Error('Error al obtener productos');
     const products = await res.json();
 
     if (products.length === 0) {
@@ -65,52 +71,59 @@ async function loadProducts() {
 
     productList.innerHTML = products.map(p => `
       <div class="card">
-        <img src="${p.image ? p.image : '/imagenes/default.png'}" alt="${p.title}">
+        <img src="${p.image || '/imagenes/default.png'}" alt="${p.title}">
         <h3>${p.title}</h3>
         <p>${p.description || 'Sin descripción'}</p>
         <p class="price">$${p.price_per_day?.toLocaleString() || '0'} / día</p>
       </div>
     `).join('');
-  } catch (err) {
-    console.error('Error cargando productos:', err);
+  } catch (error) {
+    console.error('Error cargando productos:', error);
     productList.innerHTML = '<p>Error cargando productos desde el servidor.</p>';
   }
 }
 
-
 // ============================
-// Carrusel de la página de inicio
+// Carrusel automático y manual
 // ============================
 
-document.addEventListener('DOMContentLoaded', () => {
+function iniciarCarrusel() {
   const track = document.querySelector('.carousel-track');
   if (!track) return;
 
   const prevBtn = document.querySelector('.carousel-btn.prev');
   const nextBtn = document.querySelector('.carousel-btn.next');
-  track.innerHTML += track.innerHTML; // scroll infinito
-  let position = 0;
-  let speed = 2;
 
-  function animate() {
+  let position = 0;
+  const speed = 1; // velocidad del movimiento automático
+
+  function moveCarousel() {
     position -= speed;
-    const width = track.scrollWidth / 2;
-    if (-position >= width) position = 0;
+    if (Math.abs(position) >= track.scrollWidth / 2) {
+      position = 0;
+    }
     track.style.transform = `translateX(${position}px)`;
-    requestAnimationFrame(animate);
+    requestAnimationFrame(moveCarousel);
   }
 
-  animate();
+  // Duplicar contenido para scroll infinito
+  track.innerHTML += track.innerHTML;
 
-  track.parentElement.addEventListener('mouseenter', () => speed = 0);
-  track.parentElement.addEventListener('mouseleave', () => speed = 2);
+  // Iniciar movimiento
+  moveCarousel();
 
+  // Pausar al pasar el mouse
+  track.parentElement.addEventListener('mouseenter', () => cancelAnimationFrame(moveCarousel));
+  track.parentElement.addEventListener('mouseleave', () => moveCarousel());
+
+  // Botones manuales
   nextBtn.addEventListener('click', () => {
     position -= 200;
     track.style.transform = `translateX(${position}px)`;
   });
+
   prevBtn.addEventListener('click', () => {
     position += 200;
     track.style.transform = `translateX(${position}px)`;
   });
-});
+}
