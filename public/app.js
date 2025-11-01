@@ -48,7 +48,7 @@ async function loadProducts() {
   if (!productList) return;
 
   try {
-    const res = await fetch('/api/products');
+   const res = await fetch('https://pagina1-0.onrender.com/api/products');
     const products = await res.json();
 
     productList.innerHTML = products.map(p => `
