@@ -5,21 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Alquiler de Equipos - Edison Vega</title>
   <link rel="stylesheet" href="public.css">
+  <style>
+    .hidden { display: none; }
+    .nav a.active {
+      font-weight: bold;
+      border-bottom: 2px solid #fff;
+    }
+  </style>
 </head>
 <body>
   <!-- HEADER / NAV -->
   <header class="header">
     <div class="logo">Edison Vega técnico profesional</div>
     <nav class="nav">
-      <a href="#" data-page="home-page">Inicio</a>
+      <a href="#" class="active" data-page="home-page">Inicio</a>
       <a href="#" data-page="products-page">Equipos</a>
     </nav>
     <div class="menu">☰</div>
   </header>
 
-  <!-- PAGES -->
+  <!-- CONTENIDO PRINCIPAL -->
   <main>
-    <!-- HOME -->
+    <!-- INICIO -->
     <section id="home-page" class="page">
       <div class="hero">
         <h1>Alquiler de Equipos de Construcción</h1>
@@ -27,10 +34,9 @@
         <p>📱 Gira el teléfono a horizontal para mejor vista</p>
       </div>
 
-      <!-- CARRUSEL DE PRODUCTOS -->
+      <!-- CARRUSEL -->
       <section id="featured-products" class="carousel-section">
         <h2 class="section-title">Equipos de Construcción</h2>
-
         <div class="carousel-container">
           <button class="carousel-btn prev">❮</button>
           <div class="carousel-track">
@@ -76,7 +82,7 @@
         <h2>Equipos disponibles</h2>
         <div class="warning-box">
           ⚠️ <strong>Importante:</strong> Los equipos como <b>teleras</b>, <b>andamios</b> o <b>tacos</b> no se alquilan por separado. 
-          Deben ir en un paquete, pero estamos <b>abiertos a negociación</b>
+          Deben ir en un paquete, pero estamos <b>abiertos a negociación</b>.
         </div>
         <div id="product-list" class="grid"></div>
       </div>
@@ -86,6 +92,32 @@
   <footer class="footer">
     <p>Alquiler de Equipos Edison Vega.</p>
   </footer>
+
+  <script>
+    // Control de navegación entre secciones
+    const navLinks = document.querySelectorAll('.nav a');
+    const pages = document.querySelectorAll('.page');
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const pageId = link.getAttribute('data-page');
+
+        // Mostrar solo la sección seleccionada
+        pages.forEach(page => page.classList.add('hidden'));
+        document.getElementById(pageId).classList.remove('hidden');
+
+        // Actualizar estilo del menú activo
+        navLinks.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+      });
+    });
+
+    // Menú hamburguesa (para móviles)
+    const menu = document.querySelector('.menu');
+    const nav = document.querySelector('.nav');
+    menu.addEventListener('click', () => nav.classList.toggle('active'));
+  </script>
 
   <script src="app.js"></script>
 </body>
