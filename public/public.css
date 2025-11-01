@@ -1,5 +1,5 @@
 :root {
-  --primary:  #0077b6;
+  --primary: #0077b6;
   --secondary: #f77f00;
   --bg: #f0f4f8;
   --text: #03045e;
@@ -7,12 +7,12 @@
 }
 
 /* Reset y globales */
-* { box-sizing: border-box; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: "Poppins", sans-serif;
-  margin: 0;
   background: var(--bg);
   color: var(--text);
+  overflow-x: hidden;
 }
 
 /* Header */
@@ -23,8 +23,11 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 12px 20px;
-  position: sticky; top: 0; z-index: 10;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
+
 .logo { font-weight: 700; font-size: 1.4em; }
 .nav a {
   color: #fff;
@@ -32,7 +35,12 @@ body {
   text-decoration: none;
   font-weight: 500;
 }
-.menu { display: none; cursor: pointer; }
+
+.menu {
+  display: none;
+  font-size: 1.8em;
+  cursor: pointer;
+}
 
 /* Hero */
 .hero {
@@ -42,63 +50,53 @@ body {
   color: #fff;
   border-radius: 15px;
   margin: 20px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-  transform: translateY(0);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   animation: heroEntrance 1s ease-out;
 }
 
 .hero h1 {
-  font-size: 2.8em;
+  font-size: 2.5em;
   margin-bottom: 12px;
-  text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
 }
 
 .hero p {
-  font-size: 1.3em;
+  font-size: 1.2em;
   opacity: 0.9;
-  animation: heroTextFade 1.5s ease forwards;
-}
-
-/* Animaciones */
-@keyframes heroEntrance {
-  0% { transform: translateY(-20px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes heroTextFade {
-  0% { opacity: 0; transform: translateY(10px); }
-  100% { opacity: 0.9; transform: translateY(0); }
 }
 
 /* Contenedores */
-.container { max-width: 1100px; margin: 20px auto; padding: 20px; }
-.grid { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+.container {
+  max-width: 1100px;
+  margin: 20px auto;
+  padding: 20px;
+}
 
-/* Cards de productos */
+.grid {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Cards */
 .card {
   background: #fff;
   width: 280px;
   border-radius: 15px;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
   overflow: hidden;
   transition: transform 0.3s, box-shadow 0.3s;
-  position: relative;
 }
 
 .card:hover {
   transform: translateY(-8px) scale(1.03);
-  box-shadow: 0 12px 25px rgba(0,0,0,0.25);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
 }
 
 .card img {
   width: 100%;
   height: 180px;
   object-fit: cover;
-  transition: transform 0.3s;
-}
-
-.card:hover img {
-  transform: scale(1.05);
 }
 
 .card h3 {
@@ -120,7 +118,6 @@ body {
   font-size: 1.05em;
 }
 
-/* Botón de productos */
 .card button {
   width: 100%;
   padding: 10px 0;
@@ -130,30 +127,10 @@ body {
   cursor: pointer;
   border-radius: 0 0 15px 15px;
   font-weight: 600;
-  transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
 }
 
 .card button:hover {
   background: #e36b00;
-  transform: translateY(-3px);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-}
-
-/* Animación al cargar las cards */
-.grid .card {
-  opacity: 0;
-  transform: translateY(20px);
-  animation: cardEntrance 0.6s ease forwards;
-}
-
-.grid .card:nth-child(1) { animation-delay: 0.1s; }
-.grid .card:nth-child(2) { animation-delay: 0.2s; }
-.grid .card:nth-child(3) { animation-delay: 0.3s; }
-.grid .card:nth-child(4) { animation-delay: 0.4s; }
-
-@keyframes cardEntrance {
-  0% { opacity: 0; transform: translateY(20px); }
-  100% { opacity: 1; transform: translateY(0); }
 }
 
 /* Carrusel */
@@ -164,7 +141,7 @@ body {
   background-color: #f8fafc;
   border-radius: 12px;
   padding: 20px 0;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .carousel-container {
@@ -185,10 +162,9 @@ body {
   text-align: center;
   background: white;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
-  position: relative;
+  transition: transform 0.4s ease;
   cursor: pointer;
 }
 
@@ -196,7 +172,6 @@ body {
   width: 100%;
   height: 180px;
   object-fit: cover;
-  transition: transform 0.5s ease;
 }
 
 .carousel-caption {
@@ -206,43 +181,10 @@ body {
   padding: 10px;
   font-weight: bold;
   text-align: center;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0, 0, 0, 0.6);
   color: #fff;
   font-size: 1em;
   transition: all 0.4s ease;
-  border-radius: 0 0 12px 12px;
-}
-
-.carousel-item:hover {
-  transform: rotateY(5deg) scale(1.05);
-  box-shadow: 0 20px 35px rgba(0,0,0,0.3);
-}
-
-.carousel-item:hover img {
-  transform: scale(1.15);
-}
-
-.carousel-item:hover .carousel-caption {
-  bottom: 0;
-  background: rgba(0,0,0,0.8);
-  transform: translateY(-5px);
-}
-
-/* Animación del carrusel */
-.carousel-item {
-  opacity: 0;
-  transform: translateY(20px);
-  animation: carouselItemEntrance 0.6s ease forwards;
-}
-
-.carousel-item:nth-child(1) { animation-delay: 0.05s; }
-.carousel-item:nth-child(2) { animation-delay: 0.1s; }
-.carousel-item:nth-child(3) { animation-delay: 0.15s; }
-.carousel-item:nth-child(4) { animation-delay: 0.2s; }
-
-@keyframes carouselItemEntrance {
-  0% { opacity: 0; transform: translateY(20px); }
-  100% { opacity: 1; transform: translateY(0); }
 }
 
 /* Footer */
@@ -253,11 +195,63 @@ body {
   padding: 12px;
 }
 
-/* Responsive */
-@media(max-width:768px){
-  .nav{display:none;}
-  .menu{display:block;}
-  .grid{flex-direction:column; align-items:center;}
-  .card{width:90%;}
-  .carousel-item { flex: 0 0 80%; }
+/* -------------------- */
+/* RESPONSIVE MÓVIL 📱 */
+/* -------------------- */
+@media (max-width: 900px) {
+  .logo {
+    font-size: 1.1em;
+  }
+
+  .hero {
+    padding: 60px 15px;
+    margin: 10px;
+  }
+
+  .hero h1 {
+    font-size: 1.8em;
+  }
+
+  .hero p {
+    font-size: 1em;
+  }
+
+  .carousel-item {
+    flex: 0 0 80%;
+  }
+
+  .grid {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card {
+    width: 90%;
+  }
+
+  /* menú hamburguesa funcional */
+  .menu {
+    display: block;
+  }
+
+  .nav {
+    display: none;
+    flex-direction: column;
+    background: var(--primary);
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  .nav.active {
+    display: flex;
+  }
+
+  .nav a {
+    padding: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 1.1em;
+  }
 }
